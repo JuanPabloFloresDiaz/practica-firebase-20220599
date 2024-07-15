@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   Dimensions,
   ScrollView,
-  ImageBackground,
 } from "react-native";
 import {
   TextInput,
@@ -16,6 +15,8 @@ import {
 } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { AntDesign, Entypo } from "@expo/vector-icons";
+import { auth } from '../../firebaseConfig';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 
 //Constante para manejar el alto de la pantalla
 const windowHeight = Dimensions.get("window").height;
@@ -24,13 +25,20 @@ const RegisterScreen = () => {
   //Constantes para el manejo de datos
   const [correo, setCorreo] = useState("");
   const [clave, setClave] = useState("");
+  const [error, setError] = useState(null); // Estado para manejar errores
 
   //Constante de navegación entre pantallas
   const navigation = useNavigation();
 
   //Metodo para manejar el registro de usuarios
   const handleRegister = async () => {
-
+    try {
+      await createUserWithEmailAndPassword(auth, correo, clave);
+      // Navegar a la pantalla de inicio de sesión u otra pantalla después de registrarse
+      navigation.navigate("LoginScreen");
+    } catch (err) {
+      setError(err.message); // Manejar errores
+    }
   };
 
   return (
@@ -67,6 +75,7 @@ const RegisterScreen = () => {
                   </View>
                 </View>
               </View>
+              {error && <Text style={styles.errorText}>{error}</Text>} {/* Mostrar errores */}
               <Button
                 style={styles.button}
                 mode="contained"
@@ -140,17 +149,6 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     flex: 1,
   },
-  pickerText: {
-    fontSize: 16,
-    paddingVertical: 12,
-    paddingHorizontal: 10,
-    color: "black",
-    flex: 1,
-  },
-  fila: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
   button: {
     width: "100%",
     paddingVertical: 10,
@@ -161,19 +159,8 @@ const styles = StyleSheet.create({
     marginTop: 20,
     color: "black",
   },
-  avatarContainer: {
-    alignItems: "center",
-    marginVertical: 20,
-  },
-  avatarImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-  },
-  backgroundImage: {
-    position: "absolute",
-    width: "100%",
-    height: "100%",
-    resizeMode: "cover",
+  errorText: {
+    color: 'red',
+    marginTop: 10,
   },
 });

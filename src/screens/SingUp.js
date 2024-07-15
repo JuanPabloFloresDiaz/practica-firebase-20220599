@@ -22,8 +22,6 @@ import fetchData from '../../api/components';
 const windowHeight = Dimensions.get("window").height;
 
 const RegisterScreen = () => {
-  //Url de la api
-  const USER_API = "servicios/publica/cliente.php";
   //Constantes para el manejo de datos
   const [correo, setCorreo] = useState("");
   const [clave, setClave] = useState("");
@@ -33,31 +31,11 @@ const RegisterScreen = () => {
 
   //Metodo para manejar el registro de usuarios
   const handleRegister = async () => {
-    try {
-      const formData = new FormData();
-      formData.append("correoRegistro", correo);
-      formData.append("claveRegistro", clave);
 
-      //Petición a la api para insertar un usuario
-      const response = await fetchData(USER_API, "signUpMovli", formData);
-
-      if (response.status) {
-
-      } else {
-
-      }
-    } catch (error) {
-
-    }
   };
-
 
   return (
     <PaperProvider>
-      <ImageBackground
-        source={require("../../assets/fondo-change.png")}
-        style={styles.backgroundImage}
-      ></ImageBackground>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         <View style={styles.container}>
           <Card style={styles.profileCard}>

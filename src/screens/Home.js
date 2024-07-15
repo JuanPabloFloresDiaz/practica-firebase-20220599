@@ -35,6 +35,10 @@ const Home = ({ navigation }) => {
         navigation.navigate('Add');
     }
 
+    // Función para navegar a la pantalla 'SignUp' (Solo para probar)
+    const goToSignUp = () => { 
+        navigation.navigate('SignUp');
+    }
     // Función que renderiza cada item de la lista
     const renderItem = ({ item }) => (
         <CardProductos
@@ -69,6 +73,13 @@ const Home = ({ navigation }) => {
                 style={styles.Button}
                 onPress={goToAdd}>
                 <Text style={styles.ButtonText}>Agregar Producto</Text>
+            </TouchableOpacity>
+
+            {/* Botón para navegar a la pantalla de registrarse */}
+            <TouchableOpacity
+                style={styles.Button}
+                onPress={goToSignUp}>
+                <Text style={styles.ButtonText}>Registrate</Text>
             </TouchableOpacity>
         </View>
     );

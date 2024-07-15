@@ -20,7 +20,7 @@ import { AntDesign, Entypo } from "@expo/vector-icons";
 //Constante para manejar el alto de la pantalla
 const windowHeight = Dimensions.get("window").height;
 
-const RegisterScreen = () => {
+const LoginScreen = () => {
   //Constantes para el manejo de datos
   const [correo, setCorreo] = useState("");
   const [clave, setClave] = useState("");
@@ -72,13 +72,13 @@ const RegisterScreen = () => {
                 mode="contained"
                 onPress={handleRegister}
               >
-                Registrarse
+                Iniciar Sesión
               </Button>
               <TouchableOpacity
-                onPress={() => navigation.navigate("LoginScreen")}
+                onPress={() => navigation.navigate("SignUp")}
               >
                 <Text style={styles.loginText}>
-                  ¿Ya tienes cuenta? Inicia sesión
+                  ¿No tienes cuenta? Registrate aquí
                 </Text>
               </TouchableOpacity>
             </Card.Content>
@@ -89,7 +89,7 @@ const RegisterScreen = () => {
   );
 };
 
-export default RegisterScreen;
+export default LoginScreen;
 
 const styles = StyleSheet.create({
   scrollViewContent: {

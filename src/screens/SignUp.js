@@ -15,29 +15,30 @@ import {
 } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { AntDesign, Entypo } from "@expo/vector-icons";
-import { auth } from '../../firebaseConfig';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../config/firebase'; // Ajusta el path según tu estructura de proyecto
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
-//Constante para manejar el alto de la pantalla
+// Constante para manejar el alto de la pantalla
 const windowHeight = Dimensions.get("window").height;
 
-const RegisterScreen = () => {
-  //Constantes para el manejo de datos
+const SignUp = () => {
+  // Constantes para el manejo de datos
   const [correo, setCorreo] = useState("");
   const [clave, setClave] = useState("");
-  const [error, setError] = useState(null); // Estado para manejar errores
 
-  //Constante de navegación entre pantallas
+  // Constante de navegación entre pantallas
   const navigation = useNavigation();
 
-  //Metodo para manejar el registro de usuarios
+  // Método para manejar el registro de usuarios
   const handleRegister = async () => {
     try {
-      await createUserWithEmailAndPassword(auth, correo, clave);
-      // Navegar a la pantalla de inicio de sesión u otra pantalla después de registrarse
-      navigation.navigate("LoginScreen");
-    } catch (err) {
-      setError(err.message); // Manejar errores
+      const userCredential = await createUserWithEmailAndPassword(auth, correo, clave);
+      const user = userCredential.user;
+      console.log("User registered: ", user);
+      // Puedes redirigir al usuario a otra pantalla después del registro
+      navigation.navigate("Home"); // Ajusta "Home" a la pantalla a la que quieres navegar
+    } catch (error) {
+      console.error("Error registering user: ", error);
     }
   };
 
@@ -75,7 +76,6 @@ const RegisterScreen = () => {
                   </View>
                 </View>
               </View>
-              {error && <Text style={styles.errorText}>{error}</Text>} {/* Mostrar errores */}
               <Button
                 style={styles.button}
                 mode="contained"
@@ -84,10 +84,10 @@ const RegisterScreen = () => {
                 Registrarse
               </Button>
               <TouchableOpacity
-                onPress={() => navigation.navigate("LoginScreen")}
+                onPress={() => navigation.navigate("LogIn")} // Ajusta el nombre de la pantalla de inicio de sesión
               >
                 <Text style={styles.loginText}>
-                  ¿Ya tienes cuenta? Inicia sesión
+                  ¿Ya tienes cuenta? Inicia sesión aquí
                 </Text>
               </TouchableOpacity>
             </Card.Content>
@@ -98,7 +98,7 @@ const RegisterScreen = () => {
   );
 };
 
-export default RegisterScreen;
+export default SignUp;
 
 const styles = StyleSheet.create({
   scrollViewContent: {
@@ -149,6 +149,17 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     flex: 1,
   },
+  pickerText: {
+    fontSize: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    color: "black",
+    flex: 1,
+  },
+  fila: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
   button: {
     width: "100%",
     paddingVertical: 10,
@@ -159,8 +170,19 @@ const styles = StyleSheet.create({
     marginTop: 20,
     color: "black",
   },
-  errorText: {
-    color: 'red',
-    marginTop: 10,
+  avatarContainer: {
+    alignItems: "center",
+    marginVertical: 20,
+  },
+  avatarImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+  },
+  backgroundImage: {
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
   },
 });

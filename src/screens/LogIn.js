@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Dimensions,
   ScrollView,
+  Image,
 } from "react-native";
 import {
   TextInput,
@@ -44,12 +45,26 @@ const LoginScreen = () => {
     }
   };
 
+  // Limpiar campos al montar el componente
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      setCorreo('');
+      setClave('');
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+
   return (
     <PaperProvider>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         <View style={styles.container}>
+          {/* Agregar la imagen del logo encima del contenedor del formulario */}
+          <Image source={require('../../assets/logo.jpg')} style={styles.logo} />
+          <Text style={styles.title}>Alpha Store </Text>
           <Card style={styles.profileCard}>
             <Card.Content>
+              <Text style={styles.title}>Inicio de sesión </Text>
               <View style={styles.inputContainer}>
                 <View style={styles.infoRow}>
                   <Text style={styles.label}>Correo electrónico:</Text>
@@ -114,6 +129,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     marginBottom: windowHeight * 0.15,
     paddingTop: 50,
+  },
+  logo: {
+    width: 150, // Ajusta el ancho según sea necesario
+    height: 150, // Ajusta la altura según sea necesario
+    resizeMode: 'contain', // Ajusta la forma en que la imagen se ajusta a su contenedor
+    marginBottom: 20, // Espacio opcional después de la imagen
+    borderRadius: 100,
+  },
+  title: {
+    fontSize: 18,
+    marginBottom: 5,
   },
   profileCard: {
     width: "100%",

@@ -1,7 +1,7 @@
 // Importación de bibliotecas y componentes necesarios
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
-import { database } from '../config/firebase'; // Importa la configuración de la base de datos de Firebase
+import { database, auth } from '../config/firebase'; // Importa la configuración de la base de datos de Firebase
 import { collection, onSnapshot, orderBy, query } from 'firebase/firestore'; // Importa funciones de Firestore para consultas en tiempo real
 import CardProductos from '../components/CardProductos'; // Importa el componente de tarjeta de producto
 
@@ -36,9 +36,16 @@ const Home = ({ navigation }) => {
     }
 
     // Función para navegar a la pantalla 'SignUp' (Solo para probar)
-    const goToSignUp = () => { 
-        navigation.navigate('SignUp');
-    }
+    const handleLogout = async () => {
+        try {
+            await auth.signOut(); // Función de Firebase para cerrar sesión
+            // Navegar a la pantalla de inicio de sesión después de cerrar sesión
+            navigation.navigate('LogIn'); // Ajusta el nombre de la pantalla de inicio de sesión
+        } catch (error) {
+            console.error('Error al cerrar sesión:', error);
+            // Puedes manejar el error aquí si lo deseas
+        }
+    };
     // Función que renderiza cada item de la lista
     const renderItem = ({ item }) => (
         <CardProductos
@@ -74,12 +81,11 @@ const Home = ({ navigation }) => {
                 onPress={goToAdd}>
                 <Text style={styles.ButtonText}>Agregar Producto</Text>
             </TouchableOpacity>
-
-            {/* Botón para navegar a la pantalla de registrarse */}
+            {/* Botón para regresar al login que simula cerrar sesión */}
             <TouchableOpacity
                 style={styles.Button}
-                onPress={goToSignUp}>
-                <Text style={styles.ButtonText}>Registrate</Text>
+                onPress={handleLogout}>
+                <Text style={styles.ButtonText}>Cerrar sesión</Text>
             </TouchableOpacity>
         </View>
     );
@@ -93,7 +99,8 @@ export default Home;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#FEFEFE',
+        paddingTop: 30,
+        backgroundColor: '#B7DABE', // Color verde de login
         justifyContent: 'center',
         padding: 20,
     },
@@ -111,7 +118,7 @@ const styles = StyleSheet.create({
         color:'#ff9800'
     },
     Button: {
-        backgroundColor: '#0288d1',
+        backgroundColor: '#38A34C', // Color de botón verde
         padding: 10,
         borderRadius: 5,
         marginTop: 20,

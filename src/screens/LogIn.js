@@ -16,7 +16,7 @@ import {
 } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { AntDesign, Entypo } from "@expo/vector-icons";
-import { auth } from '../config/firebase'; // Ajusta el path según tu estructura de proyecto
+import { authentication } from '../config/firebase'; // Ajusta el path según tu estructura de proyecto
 import { signInWithEmailAndPassword } from "firebase/auth";
 
 //Constante para manejar el alto de la pantalla
@@ -34,7 +34,7 @@ const LoginScreen = () => {
   //Metodo para manejar el inicio de sesión de usuarios
   const handleLogin = async () => {
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, correo, clave);
+      const userCredential = await signInWithEmailAndPassword(authentication, correo, clave);
       const user = userCredential.user;
       console.log("User logged in: ", user);
       // Navegar a la pantalla principal o la que desees después del inicio de sesión

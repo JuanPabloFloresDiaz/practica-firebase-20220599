@@ -38,7 +38,11 @@ const SignUp = () => {
       // Puedes redirigir al usuario a otra pantalla después del registro
       navigation.navigate("Home"); // Ajusta "Home" a la pantalla a la que quieres navegar
     } catch (error) {
-      console.error("Error registering user: ", error);
+      if (error.code === 'auth/network-request-failed') {
+        alert("Error de red. Por favor, verifica tu conexión a Internet.");
+      } else {
+        alert(`Error: ${error.message}`);
+      }
     }
   };
 

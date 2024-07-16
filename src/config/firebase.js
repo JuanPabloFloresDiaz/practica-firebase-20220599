@@ -1,12 +1,11 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
+import { initializeApp, getApps, getApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from 'firebase/storage';
-import { getAuth } from "firebase/auth";
+import { getAuth, initializeAuth, getReactNativePersistence } from "firebase/auth";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_KEY, AUTH_DOMAIN, PROJECT_ID, STORAGE_BUCKET, MESSAGING_SENDER_ID, APP_ID, TEST } from '@env';
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-console.log(TEST)
+
+console.log(TEST);
 // Your web app's Firebase configuration
 const firebaseConfig = {
     apiKey: API_KEY,
@@ -17,14 +16,14 @@ const firebaseConfig = {
     appId: APP_ID
 };
 
-console.log("Valor de configuracion", firebaseConfig);
-
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-if (app) {
+let app;
+if (getApps().length === 0) {
+  app = initializeApp(firebaseConfig);
   console.log('Firebase initialized successfully');
 } else {
-  console.log('Firebase initialization failed');
+  app = getApp();
+  console.log('Firebase already initialized');
 }
 
 const database = getFirestore(app);
@@ -35,14 +34,27 @@ if (database) {
 }
 
 const storage = getStorage(app);
-
 if (storage) {
   console.log('storage initialized correctly');
 } else {
   console.log('storage initialization failed');
 }
 
-const auth = getAuth(app);
+let auth;
+try {
+  auth = getAuth(app);
+  console.log('auth already initialized');
+} catch (e) {
+  if (e.code === 'auth/already-initialized') {
+    auth = getAuth(app);
+    console.log('using existing auth instance');
+  } else {
+    auth = initializeAuth(app, {
+      persistence: getReactNativePersistence(AsyncStorage)
+    });
+    console.log('auth initialized with persistence');
+  }
+}
 
 if (auth) {
   console.log('auth initialized correctly');
@@ -50,4 +62,4 @@ if (auth) {
   console.log('auth initialization failed');
 }
 
-export { database,storage, auth };
+export { database, storage, auth };

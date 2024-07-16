@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   Dimensions,
   ScrollView,
-  ImageBackground,
 } from "react-native";
 import {
   TextInput,
@@ -16,6 +15,8 @@ import {
 } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { AntDesign, Entypo } from "@expo/vector-icons";
+import { auth } from '../config/firebase'; // Ajusta el path según tu estructura de proyecto
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 //Constante para manejar el alto de la pantalla
 const windowHeight = Dimensions.get("window").height;
@@ -24,13 +25,23 @@ const LoginScreen = () => {
   //Constantes para el manejo de datos
   const [correo, setCorreo] = useState("");
   const [clave, setClave] = useState("");
+  const [error, setError] = useState("");
 
   //Constante de navegación entre pantallas
   const navigation = useNavigation();
 
-  //Metodo para manejar el registro de usuarios
-  const handleRegister = async () => {
-
+  //Metodo para manejar el inicio de sesión de usuarios
+  const handleLogin = async () => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, correo, clave);
+      const user = userCredential.user;
+      console.log("User logged in: ", user);
+      // Navegar a la pantalla principal o la que desees después del inicio de sesión
+      navigation.navigate("Home"); // Ajusta "Home" a la pantalla a la que quieres navegar
+    } catch (error) {
+      console.error("Error logging in: ", error);
+      setError("Error al iniciar sesión. Por favor, verifica tus credenciales.");
+    }
   };
 
   return (
@@ -67,10 +78,11 @@ const LoginScreen = () => {
                   </View>
                 </View>
               </View>
+              {error ? <Text style={styles.errorText}>{error}</Text> : null}
               <Button
                 style={styles.button}
                 mode="contained"
-                onPress={handleRegister}
+                onPress={handleLogin}
               >
                 Iniciar Sesión
               </Button>
@@ -175,5 +187,10 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     resizeMode: "cover",
+  },
+  errorText: {
+    color: 'red',
+    marginTop: 10,
+    textAlign: 'center',
   },
 });

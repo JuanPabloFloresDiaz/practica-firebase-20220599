@@ -40,26 +40,8 @@ if (storage) {
   console.log('storage initialization failed');
 }
 
-let auth;
-try {
-  auth = getAuth(app);
-  console.log('auth already initialized');
-} catch (e) {
-  if (e.code === 'auth/already-initialized') {
-    auth = getAuth(app);
-    console.log('using existing auth instance');
-  } else {
-    auth = initializeAuth(app, {
-      persistence: getReactNativePersistence(AsyncStorage)
-    });
-    console.log('auth initialized with persistence');
-  }
-}
-
-if (auth) {
-  console.log('auth initialized correctly');
-} else {
-  console.log('auth initialization failed');
-}
+const auth = initializeAuth(app, {
+  persistence: getReactNativePersistence(AsyncStorage)
+});
 
 export { database, storage, auth };
